@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Up from "../../public/chevron_up.png";
-import Down from "../../public/chevron_down.png";
+import Up from "/chevron_up.png";
+import Down from "/chevron_down.png";
 import { isMobile } from "react-device-detect";
 
 type SortBy =
