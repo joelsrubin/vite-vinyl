@@ -1,4 +1,6 @@
-import { useQueryClient } from "react-query";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
+import { fetchAlbums } from "./App";
 
 import "./App.css";
 import { MyLink } from "./components/Link";

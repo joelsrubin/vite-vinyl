@@ -13,12 +13,55 @@ type SortBy =
   | "format"
   | "styles";
 
+function finalFormat(d: any) {
+  return d.map((row: any) => {
+    const formattedRow: any = {};
+    Object.keys(row).forEach((key) => {
+      const value = row[key];
+      if (typeof value === "object") {
+        formattedRow[key] = value.name;
+      } else {
+        formattedRow[key] = value;
+      }
+    });
+    return formattedRow;
+  });
+}
+
+function formatRows(data: any) {
+  return data.map((row: any) => {
+    const formattedRow: any = {};
+    Object.keys(row).forEach((key) => {
+      const value = row[key];
+      if (Array.isArray(value)) {
+        formattedRow[key] = value[0];
+      } else if (typeof value === "string") {
+        formattedRow[key] = value;
+      } else if (typeof value === "object") {
+        formattedRow[key] = value.name;
+      } else if (typeof value === "number") {
+        if (value === 0) {
+          formattedRow[key] = "";
+        } else {
+          formattedRow[key] = value;
+        }
+      }
+    });
+    return formattedRow;
+  });
+}
+
 export function Table({ items }: { items: Release[] }) {
   const [sortBy, setSortBy] = useState<SortBy>("");
   const [sortedElements, setSortedElements] = useState([]);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [searched, setSearched] = useState("");
   const [originalItems, setOriginalItems] = useState([...items]);
+
+  function handleSort(val: SortBy) {
+    setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    setSortBy(val);
+  }
 
   const omittedBasicInformation = [
     "cover_image",
@@ -45,51 +88,8 @@ export function Table({ items }: { items: Release[] }) {
     return row;
   });
 
-  function formatRows(data: any) {
-    return data.map((row: any) => {
-      const formattedRow: any = {};
-      Object.keys(row).forEach((key) => {
-        const value = row[key];
-        if (Array.isArray(value)) {
-          formattedRow[key] = value[0];
-        } else if (typeof value === "string") {
-          formattedRow[key] = value;
-        } else if (typeof value === "object") {
-          formattedRow[key] = value.name;
-        } else if (typeof value === "number") {
-          if (value === 0) {
-            formattedRow[key] = "";
-          } else {
-            formattedRow[key] = value;
-          }
-        }
-      });
-      return formattedRow;
-    });
-  }
-
   const data = formatRows(rows);
-
-  function finalFormat(d: any) {
-    return d.map((row: any) => {
-      const formattedRow: any = {};
-      Object.keys(row).forEach((key) => {
-        const value = row[key];
-        if (typeof value === "object") {
-          formattedRow[key] = value.name;
-        } else {
-          formattedRow[key] = value;
-        }
-      });
-      return formattedRow;
-    });
-  }
   const final = finalFormat(data);
-  function handleSort(val: SortBy) {
-    setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    setSortBy(val);
-  }
-
   const elements = sortBy ? sortedElements : final;
 
   useEffect(() => {
@@ -135,9 +135,10 @@ export function Table({ items }: { items: Release[] }) {
       <div className="flex justify-center items-center my-10">
         <input
           type="text"
-          placeholder="search by artist or title"
+          placeholder={`${isMobile ? "search" : "search by artist or title"}`}
           className="m-5 p-5 border-none"
           onChange={handleSearch}
+          onBlur={handleSearch}
           value={searched}
         />
       </div>
