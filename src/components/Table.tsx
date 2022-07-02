@@ -136,7 +136,7 @@ export function Table({ items }: { items: Release[] }) {
         <input
           type="text"
           placeholder={`${isMobile ? "search" : "search by artist or title"}`}
-          className="m-5 p-5 border-none"
+          className="m-5 p-5 border-none text-center"
           onChange={handleSearch}
           onBlur={handleSearch}
           value={searched}

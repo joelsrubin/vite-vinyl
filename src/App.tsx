@@ -1,5 +1,8 @@
 import { useQuery } from "react-query";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { MyLink } from "./components/Link";
+import { HomePage } from "./Homepage";
+import Library from "./Library";
 
 const KEY = "QjMwskBJVDuuVwHxmJuI";
 const SECRET = "oJQZXITXAiAYDBdzvOUgdKIoWnTLvlQn";
@@ -13,14 +16,13 @@ export async function fetchAlbums() {
 }
 
 export default function App() {
-  const { isLoading } = useQuery("albums", fetchAlbums);
+  const { data } = useQuery("albums", fetchAlbums);
   return (
-    <div className="font-mono text-center text-xl mt-20">
-      <h1>Vinyl Cup</h1>
-      <ul className="mt-20 flex flex-col gap-10 items-center">
-        <MyLink to="/library" text="Table View" isLoading={isLoading} />
-        {/* <MyLink to="/cards" text="Card View" state={state} /> */}
-      </ul>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/library" element={<Library data={data} />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
