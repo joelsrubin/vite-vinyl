@@ -104,7 +104,7 @@ export function Table({ items }: { items: Release[] }) {
         return 0;
       })
     );
-  }, [sortDirection]);
+  }, [sortDirection, originalItems]);
 
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     setSearched(e.target.value);
