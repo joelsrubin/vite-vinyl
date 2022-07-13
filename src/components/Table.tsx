@@ -1,11 +1,7 @@
 import { useMemo, useState } from "react";
 
 import { isMobile } from "react-device-detect";
-import {
-  rankItem,
-  compareItems,
-  RankingInfo,
-} from "@tanstack/match-sorter-utils";
+import { rankItem, RankingInfo } from "@tanstack/match-sorter-utils";
 import {
   ColumnDef,
   flexRender,
@@ -14,13 +10,12 @@ import {
   SortingState,
   useReactTable,
   VisibilityState,
-  sortingFns,
   FilterFn,
-  SortingFn,
   ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import DebouncedInput from "./DebouncedInput";
+import { omittedBasicInformation } from "../constants";
 
 declare module "@tanstack/table-core" {
   interface FilterMeta {
@@ -36,15 +31,6 @@ type Album = {
   title: string;
   year: number;
 };
-
-const omittedBasicInformation = [
-  "cover_image",
-  "id",
-  "master_id",
-  "master_url",
-  "resource_url",
-  "thumb",
-];
 
 function finalFormat(d: any) {
   return d.map((row: any) => {
@@ -110,7 +96,7 @@ export function MyTable({ items }: { items: Release[] }) {
   const [columnVisibility, setColumnVisibility] = useState(
     optionsObj as VisibilityState
   );
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const [globalFilter, setGlobalFilter] = useState("");
   const columns = Object.keys(items[0].basic_information).filter(
     (h) => !omittedBasicInformation.includes(h)
@@ -172,10 +158,8 @@ export function MyTable({ items }: { items: Release[] }) {
     state: {
       sorting,
       columnVisibility,
-      columnFilters,
       globalFilter,
     },
-    onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyFilter,
     onColumnVisibilityChange: setColumnVisibility,
@@ -185,18 +169,20 @@ export function MyTable({ items }: { items: Release[] }) {
     getCoreRowModel: getCoreRowModel(),
     debugTable: true,
   });
-  console.log(table.getState());
+
   return (
     <>
       <div className="justify-center content-center items-center flex mt-5">
         <DebouncedInput
           value={globalFilter ?? ""}
           onChange={(value) => setGlobalFilter(String(value))}
-          className="p-2 font-lg shadow border border-block  "
+          className={`p-2 font-lg shadow border border-block ${
+            isMobile ? "w-1/2" : "w-1/4"
+          } `}
           placeholder="Search all..."
         />
       </div>
-      <table className="font-mono mt-10 mx-10">
+      <table className="font-mono place-items-center m-auto mt-10 ">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -211,7 +197,7 @@ export function MyTable({ items }: { items: Release[] }) {
                       <div
                         {...{
                           className: header.column.getCanSort()
-                            ? "cursor-pointer select-none flex flex-row"
+                            ? "cursor-pointer select-none"
                             : "",
                           onClick: header.column.getToggleSortingHandler(),
                         }}
@@ -237,7 +223,7 @@ export function MyTable({ items }: { items: Release[] }) {
             <tr key={row.id} className="odd:bg-slate-100">
               {row.getVisibleCells().map((cell) => {
                 return (
-                  <td key={cell.id} className="pl-5 text-left py-5">
+                  <td key={cell.id} className="pl-5 text-left py-5 pr-5">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 );
