@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import { fetchAlbums } from "./App";
-import { MyLink } from "./components/Link";
+import { fetchAlbums } from "../App";
+import { MyLink } from "../components/Link";
 
 export function HomePage() {
   const { isLoading } = useQuery("albums", fetchAlbums);

@@ -1,9 +1,9 @@
 import { ClipLoader } from "react-spinners";
-import "./App.css";
-import { MyLink } from "./components/Link";
-import { MyTable } from "./components/Table";
+import "../App.css";
+import { MyLink } from "../components/Link";
+import { MyTable } from "../components/Table";
 
-function Library({ data }: { data: Info }) {
+function Library({ data }: { data: Info | undefined }) {
   if (!data) {
     return (
       <div className="flex justify-center content-center items-center min-h-screen">

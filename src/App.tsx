@@ -1,8 +1,8 @@
 import { useQuery } from "react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { HomePage } from "./Homepage";
-import Library from "./Library";
+import { HomePage } from "./pages/Homepage";
+import Library from "./pages/Library";
 
 const KEY = "QjMwskBJVDuuVwHxmJuI";
 const SECRET = "oJQZXITXAiAYDBdzvOUgdKIoWnTLvlQn";
@@ -17,12 +17,12 @@ export async function fetchAlbums() {
 
 export default function App() {
   const { data } = useQuery("albums", fetchAlbums);
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/library" element={<Library data={data} />} />
-        <Route path="*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   );

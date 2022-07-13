@@ -13,9 +13,11 @@ import {
   FilterFn,
   ColumnFiltersState,
   getFilteredRowModel,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
 import DebouncedInput from "./DebouncedInput";
 import { omittedBasicInformation } from "../constants";
+import { finalFormat, formatRows } from "../utils";
 
 declare module "@tanstack/table-core" {
   interface FilterMeta {
@@ -32,43 +34,6 @@ type Album = {
   year: number;
 };
 
-function finalFormat(d: any) {
-  return d.map((row: any) => {
-    const formattedRow: any = {};
-    Object.keys(row).forEach((key) => {
-      const value = row[key];
-      if (typeof value === "object") {
-        formattedRow[key] = value.name;
-      } else {
-        formattedRow[key] = value;
-      }
-    });
-    return formattedRow;
-  });
-}
-
-function formatRows(data: any) {
-  return data.map((row: any) => {
-    const formattedRow: any = {};
-    Object.keys(row).forEach((key) => {
-      const value = row[key];
-      if (Array.isArray(value)) {
-        formattedRow[key] = value[0];
-      } else if (typeof value === "string") {
-        formattedRow[key] = value;
-      } else if (typeof value === "object") {
-        formattedRow[key] = value.name;
-      } else if (typeof value === "number") {
-        if (value === 0) {
-          formattedRow[key] = "";
-        } else {
-          formattedRow[key] = value;
-        }
-      }
-    });
-    return formattedRow;
-  });
-}
 const optionsObj = isMobile
   ? {
       Year: false,
@@ -131,6 +96,7 @@ export function MyTable({ items }: { items: Release[] }) {
         header: "Year",
         accessor: "year",
         accessorFn: (info) => info.year,
+        sortable: false,
       },
       {
         header: "Genres",
@@ -167,6 +133,7 @@ export function MyTable({ items }: { items: Release[] }) {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
   });
 
@@ -176,7 +143,7 @@ export function MyTable({ items }: { items: Release[] }) {
         <DebouncedInput
           value={globalFilter ?? ""}
           onChange={(value) => setGlobalFilter(String(value))}
-          className={`p-2 font-lg shadow border border-block ${
+          className={`p-2 font-lg shadow border border-block font-mono ${
             isMobile ? "w-1/2" : "w-1/4"
           } `}
           placeholder="Search all..."
@@ -232,6 +199,22 @@ export function MyTable({ items }: { items: Release[] }) {
           ))}
         </tbody>
       </table>
+      <div className="justify-evenly content-center items-center flex mt-5 mb-5">
+        <button
+          className="border rounded p-5"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<"}
+        </button>
+        <button
+          className="border rounded p-5"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {">"}
+        </button>
+      </div>
     </>
   );
 }
