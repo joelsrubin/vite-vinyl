@@ -11,7 +11,6 @@ import {
   useReactTable,
   VisibilityState,
   FilterFn,
-  ColumnFiltersState,
   getFilteredRowModel,
   getPaginationRowModel,
 } from "@tanstack/react-table";
@@ -143,7 +142,7 @@ export function MyTable({ items }: { items: Release[] }) {
         <DebouncedInput
           value={globalFilter ?? ""}
           onChange={(value) => setGlobalFilter(String(value))}
-          className={`p-2 font-lg shadow border border-block font-mono ${
+          className={`p-4 text-lg shadow border border-block font-mono ${
             isMobile ? "w-1/2" : "w-1/4"
           } `}
           placeholder="Search all..."
