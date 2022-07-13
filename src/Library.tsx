@@ -1,11 +1,15 @@
 import { ClipLoader } from "react-spinners";
 import "./App.css";
 import { MyLink } from "./components/Link";
-import { Table } from "./components/Table";
+import { MyTable } from "./components/Table";
 
 function Library({ data }: { data: Info }) {
   if (!data) {
-    return <ClipLoader size={20} />;
+    return (
+      <div className="flex justify-center content-center items-center min-h-screen">
+        <ClipLoader size={40} />
+      </div>
+    );
   }
   return (
     <div>
@@ -17,7 +21,7 @@ function Library({ data }: { data: Info }) {
       <nav className="flex justify-center mt-4">
         <MyLink to="/" text="Home" />
       </nav>
-      <Table items={data.releases} />
+      <MyTable items={data.releases} />
     </div>
   );
 }

@@ -1,17 +1,50 @@
-import { useEffect, useState } from "react";
-import Up from "/chevron_up.png";
-import Down from "/chevron_down.png";
-import { isMobile } from "react-device-detect";
+import { useMemo, useState } from "react";
 
-type SortBy =
-  | ""
-  | "title"
-  | "artists"
-  | "year"
-  | "genre"
-  | "label"
-  | "format"
-  | "styles";
+import { isMobile } from "react-device-detect";
+import {
+  rankItem,
+  compareItems,
+  RankingInfo,
+} from "@tanstack/match-sorter-utils";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+  VisibilityState,
+  sortingFns,
+  FilterFn,
+  SortingFn,
+  ColumnFiltersState,
+  getFilteredRowModel,
+} from "@tanstack/react-table";
+import DebouncedInput from "./DebouncedInput";
+
+declare module "@tanstack/table-core" {
+  interface FilterMeta {
+    itemRank: RankingInfo;
+  }
+}
+
+type Album = {
+  artists: string;
+  genres: string;
+  labels: string;
+  styles: string;
+  title: string;
+  year: number;
+};
+
+const omittedBasicInformation = [
+  "cover_image",
+  "id",
+  "master_id",
+  "master_url",
+  "resource_url",
+  "thumb",
+];
 
 function finalFormat(d: any) {
   return d.map((row: any) => {
@@ -50,38 +83,43 @@ function formatRows(data: any) {
     return formattedRow;
   });
 }
+const optionsObj = isMobile
+  ? {
+      Year: false,
+      Genres: false,
+      Labels: false,
+      Styles: false,
+    }
+  : {};
 
-export function Table({ items }: { items: Release[] }) {
-  const [sortBy, setSortBy] = useState<SortBy>("");
-  const [sortedElements, setSortedElements] = useState([]);
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-  const [searched, setSearched] = useState("");
-  const [originalItems, setOriginalItems] = useState([...items]);
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value);
 
-  function handleSort(val: SortBy) {
-    setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    setSortBy(val);
-  }
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  });
 
-  const omittedBasicInformation = [
-    "cover_image",
-    "id",
-    "master_id",
-    "master_url",
-    "resource_url",
-    "thumb",
-  ];
+  // Return if the item should be filtered in/out
+  return itemRank.passed;
+};
 
-  const mobileContent = ["title", "artists"];
-
-  const headers = Object.keys(originalItems[0].basic_information).filter((h) =>
-    isMobile ? mobileContent.includes(h) : !omittedBasicInformation.includes(h)
+export function MyTable({ items }: { items: Release[] }) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnVisibility, setColumnVisibility] = useState(
+    optionsObj as VisibilityState
+  );
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const columns = Object.keys(items[0].basic_information).filter(
+    (h) => !omittedBasicInformation.includes(h)
   );
 
   // extract the row data for each album
-  const rows = originalItems.map((album) => {
+  const rows = items.map((album) => {
     const row: any = {};
-    headers.forEach((header: any) => {
+    columns.forEach((header: any) => {
       //@ts-ignore
       row[header] = album.basic_information[header];
     });
@@ -89,100 +127,125 @@ export function Table({ items }: { items: Release[] }) {
   });
 
   const data = formatRows(rows);
-  const final = finalFormat(data);
-  const elements = sortBy ? sortedElements : final;
+  const final: Album[] = useMemo(() => finalFormat(data), []);
+  const cols: ColumnDef<Album>[] = useMemo(
+    () => [
+      {
+        header: "Title",
+        cell: (info) => info.getValue(),
+        accessorKey: "title",
+        sortable: true,
+      },
+      {
+        header: "Artists",
+        accessor: "artists",
+        accessorFn: (info) => info.artists,
+      },
+      {
+        header: "Year",
+        accessor: "year",
+        accessorFn: (info) => info.year,
+      },
+      {
+        header: "Genres",
+        accessor: "genres",
+        accessorFn: (info) => info.genres,
+      },
+      {
+        header: "Labels",
+        accessor: "labels",
+        accessorFn: (info) => info.labels,
+      },
 
-  useEffect(() => {
-    setSortedElements(
-      final.sort((a: any, b: any) => {
-        if (a[sortBy] < b[sortBy]) {
-          return sortDirection === "asc" ? -1 : 1;
-        }
-        if (a[sortBy] > b[sortBy]) {
-          return sortDirection === "asc" ? 1 : -1;
-        }
-        return 0;
-      })
-    );
-  }, [sortDirection, originalItems]);
+      {
+        header: "Styles",
+        accessor: "styles",
+        accessorFn: (info) => info.styles,
+      },
+    ],
+    []
+  );
 
-  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
-    setSearched(e.target.value);
-  }
-
-  useEffect(() => {
-    if (!searched) {
-      setOriginalItems([...items]);
-    }
-    if (searched) {
-      const searchables = [...items];
-      const filteredAlbums = searchables.filter(
-        (album) =>
-          album.basic_information.title.toLowerCase().includes(searched) ||
-          album.basic_information.artists
-            .map((artist) => artist.name.toLowerCase())
-            .join(" ")
-            .includes(searched)
-      );
-      if (filteredAlbums.length) {
-        setOriginalItems(filteredAlbums);
-      }
-    }
-  }, [searched]);
-
+  const table = useReactTable({
+    data: final,
+    columns: cols,
+    state: {
+      sorting,
+      columnVisibility,
+      columnFilters,
+      globalFilter,
+    },
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: fuzzyFilter,
+    onColumnVisibilityChange: setColumnVisibility,
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getCoreRowModel: getCoreRowModel(),
+    debugTable: true,
+  });
+  console.log(table.getState());
   return (
-    <div>
-      <div className="flex justify-center items-center my-10">
-        <input
-          type="text"
-          placeholder={`${isMobile ? "search" : "search by artist or title"}`}
-          className="m-5 p-5 border-none text-center"
-          onChange={handleSearch}
-          onBlur={handleSearch}
-          value={searched}
+    <>
+      <div className="justify-center content-center items-center flex mt-5">
+        <DebouncedInput
+          value={globalFilter ?? ""}
+          onChange={(value) => setGlobalFilter(String(value))}
+          className="p-2 font-lg shadow border border-block  "
+          placeholder="Search all..."
         />
       </div>
-      <table className="flex justify-center mt-10 font-mono ">
+      <table className="font-mono mt-10 mx-10">
         <thead>
-          <tr>
-            {headers.map((hdr) => (
-              <th
-                key={hdr}
-                className={`hover:underline text-left cursor-pointer ${
-                  hdr === sortBy && "underline"
-                }`}
-                onClick={() => handleSort(hdr as SortBy)}
-              >
-                <div className="flex flex-row px-10">
-                  {hdr.toUpperCase()}
-                  {hdr === sortBy && (
-                    <img
-                      src={sortDirection === "asc" ? Up : Down}
-                      alt="up"
-                      height={20}
-                      width={20}
-                      style={{
-                        display: "inline",
-                        marginLeft: "0.5rem",
-                        fontWeight: "bold",
-                      }}
-                    />
-                  )}
-                </div>
-              </th>
-            ))}
-          </tr>
-          {elements.map((row: any, i: number) => (
-            <tr key={i} className="odd:bg-slate-100">
-              {Object.keys(row).map((key) => (
-                <td key={key} className="px-10 py-5">
-                  {row[key]}
-                </td>
-              ))}
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    className="px-5 text-left mr-5"
+                  >
+                    {header.isPlaceholder ? null : (
+                      <div
+                        {...{
+                          className: header.column.getCanSort()
+                            ? "cursor-pointer select-none flex flex-row"
+                            : "",
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: " 🔼",
+                          desc: " 🔽",
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                    )}
+                  </th>
+                );
+              })}
             </tr>
           ))}
         </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id} className="odd:bg-slate-100">
+              {row.getVisibleCells().map((cell) => {
+                return (
+                  <td key={cell.id} className="pl-5 text-left py-5">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
       </table>
-    </div>
+    </>
   );
 }

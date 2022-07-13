@@ -310,6 +310,25 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
+"@tanstack/match-sorter-utils@^8.1.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/match-sorter-utils/-/match-sorter-utils-8.1.1.tgz#895f407813254a46082a6bbafad9b39b943dc834"
+  integrity sha512-IdmEekEYxQsoLOR0XQyw3jD1GujBpRRYaGJYQUw1eOT1eUugWxdc7jomh1VQ1EKHcdwDLpLaCz/8y4KraU4T9A==
+  dependencies:
+    remove-accents "0.4.2"
+
+"@tanstack/react-table@^8.2.2":
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.2.2.tgz#4d07be1c68ba1955d4afb04db483c5be3082e29d"
+  integrity sha512-X5odzgYciE3PUhlt2Adnc/p2PrR6lMAnUCHAwUGIiwA0TspkIjdhrgrkJf044BDIVytiofdb5fICDfZ77lcz1g==
+  dependencies:
+    "@tanstack/table-core" "8.2.2"
+
+"@tanstack/table-core@8.2.2":
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.2.2.tgz#e7413e077fe5e6e52a521fbc52c9dff8b15ae521"
+  integrity sha512-DQpX6S7Fob0ytfx8BzMLNAx/X4s1qxP66xZ5I2h7gHM2pCXmKMPU/dF4IMzq1lbJo7rDFlEMHffSz3knh7yX/Q==
+
 "@types/prop-types@*":
   version "15.7.5"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
