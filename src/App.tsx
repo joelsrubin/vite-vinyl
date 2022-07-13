@@ -22,6 +22,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/library" element={<Library data={data} />} />
+        <Route path="*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   );
