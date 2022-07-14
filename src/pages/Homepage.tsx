@@ -59,7 +59,7 @@ export function HomePage({
         <img
           src="https://fav.farm/%F0%9F%92%BF"
           alt="discogs logo"
-          className={`m-20 ${
+          className={`m-10 ${
             isMobile ? "h-1/2 w-1/2" : "h-40 w-40"
           } animate-spin-slow`}
         />
