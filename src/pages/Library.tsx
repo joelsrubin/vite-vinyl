@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import "../App.css";
 import { MyLink } from "../components/Link";
@@ -15,14 +15,15 @@ function Library({
   setData: (data: Info | undefined) => void;
 }) {
   const params = useParams();
-  const { mutateAsync: mutate } = useFetchAlbums();
+  const navigate = useNavigate();
+  // const { mutateAsync: mutate } = useFetchAlbums();
   const { userName } = params;
 
   useEffect(() => {
     if (!data) {
-      mutate(String(userName), { onSuccess: (result) => setData(result) });
+      navigate("/");
     }
-  }, [data, userName]);
+  }, [data]);
 
   if (!data) {
     return (
