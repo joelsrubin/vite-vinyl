@@ -12,11 +12,23 @@ import { ClipLoader } from "react-spinners";
 import "../App.css";
 import { MyLink } from "../components/Link";
 import { MyTable } from "../components/Table";
+import { useFetchAlbums } from "../hooks/useFetchAlbums";
 
-function Library({ data }: { data: Info | undefined }) {
+function Library({
+  data,
+  setData,
+}: {
+  data: Info | undefined;
+  setData: (data: Info | undefined) => void;
+}) {
   const params = useParams();
+  const { mutateAsync: mutate } = useFetchAlbums();
   const { userName } = params;
-
+  useEffect(() => {
+    if (!data) {
+      mutate(String(userName), { onSuccess: (result) => setData(result) });
+    }
+  }, [data, userName]);
   if (!data) {
     return (
       <div className="flex justify-center content-center items-center min-h-screen">

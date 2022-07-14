@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
 
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,8 @@ export function HomePage({
 
   const { mutateAsync: mutate, isLoading } = useFetchAlbums();
 
-  const submitHandler = async () => {
+  const submitHandler = async (event: any) => {
+    event.preventDefault();
     await mutate(userName, {
       onSuccess: (result) => {
         setData(result);
@@ -33,6 +34,7 @@ export function HomePage({
   return (
     <div className="font-mono text-center text-xl mt-20">
       <h1>Vinyl Catalogue</h1>
+
       <div
         className={`flex flex-col justify-center content-center items-center mt-10 ${
           isMobile ? "" : ""
@@ -49,6 +51,7 @@ export function HomePage({
           } font-mono ${isMobile ? "w-1/2" : "w-1/4"} `}
           placeholder="Enter Discogs Username"
           error={error}
+          name="userName"
         />
         <label className="text-sm text-right mt-5">
           Enter A Discogs Username
