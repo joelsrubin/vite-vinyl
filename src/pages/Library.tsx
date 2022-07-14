@@ -5,18 +5,11 @@ import { ClipLoader } from "react-spinners";
 import "../App.css";
 import { MyLink } from "../components/Link";
 import { MyTable } from "../components/Table";
-import { useFetchAlbums } from "../hooks/useFetchAlbums";
 
-function Library({
-  data,
-  setData,
-}: {
-  data: Info | undefined;
-  setData: (data: Info | undefined) => void;
-}) {
+function Library({ data }: { data: Info | undefined }) {
   const params = useParams();
   const navigate = useNavigate();
-  // const { mutateAsync: mutate } = useFetchAlbums();
+
   const { userName } = params;
 
   useEffect(() => {

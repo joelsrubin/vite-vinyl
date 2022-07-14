@@ -6,3 +6,11 @@ export const omittedBasicInformation = [
   "resource_url",
   "thumb",
 ];
+
+export function getMobileStyle(isMobile: boolean) {
+  if (isMobile) {
+    return "w-1/2";
+  } else {
+    return "w-1/4";
+  }
+}

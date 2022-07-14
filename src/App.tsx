@@ -10,10 +10,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage setData={setData} />} />
-        <Route
-          path="/library/:userName"
-          element={<Library data={data} setData={setData} />}
-        />
+        <Route path="/library/:userName" element={<Library data={data} />} />
       </Routes>
     </BrowserRouter>
   );
