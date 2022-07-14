@@ -4,11 +4,13 @@ export default function DebouncedInput({
   value: initialValue,
   onChange,
   debounce = 500,
+  error = null,
   ...props
 }: {
-  value: string | number;
-  onChange: (value: string | number) => void;
+  value: string;
+  onChange: (value: string) => void;
   debounce?: number;
+  error?: Error | null;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">) {
   const [value, setValue] = React.useState(initialValue);
 
@@ -25,10 +27,17 @@ export default function DebouncedInput({
   }, [value]);
 
   return (
-    <input
-      {...props}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-    />
+    <>
+      <input
+        {...props}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      {error && (
+        <div className="text-red-500 font-mono text-sm mt-4">
+          {error.message}
+        </div>
+      )}
+    </>
   );
 }

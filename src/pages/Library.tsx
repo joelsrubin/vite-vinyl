@@ -1,25 +1,23 @@
 import { useEffect } from "react";
+import {
+  MutationCache,
+  QueryCache,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
+
+import { useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import "../App.css";
 import { MyLink } from "../components/Link";
 import { MyTable } from "../components/Table";
 
-function Library({
-  data = {} as Info,
-  userName,
-  mutate,
-}: {
-  data: Info | undefined;
-  userName: string | number;
-  mutate: any;
-}) {
-  useEffect(() => {
-    if (Object.keys(data).length === 0) {
-      mutate(userName);
-    }
-  }, [data]);
+function Library({ data }: { data: Info | undefined }) {
+  const params = useParams();
+  const { userName } = params;
 
-  if (Object.keys(data).length === 0) {
+  if (!data) {
     return (
       <div className="flex justify-center content-center items-center min-h-screen">
         <ClipLoader size={40} />

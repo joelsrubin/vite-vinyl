@@ -1,27 +1,33 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { isMobile } from "react-device-detect";
 
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 
 import DebouncedInput from "../components/DebouncedInput";
+import { useFetchAlbums } from "../hooks/useFetchAlbums";
 
 export function HomePage({
-  userName,
-  mutate,
-  setUserName,
-  isLoading,
+  setData,
 }: {
-  userName: string | number;
-  setUserName: (userName: string | number) => void;
-  mutate: any;
-  isLoading: boolean;
+  setData: (data: Info | undefined) => void;
 }) {
+  const [userName, setUserName] = useState<string>("joelsrubin");
+  const [error, setError] = useState<Error | null>(null);
   const navigate = useNavigate();
 
+  const { mutateAsync: mutate, isLoading } = useFetchAlbums();
+
   const submitHandler = async () => {
-    await mutate(userName);
-    navigate("/library");
+    await mutate(userName, {
+      onSuccess: (result) => {
+        setData(result);
+        navigate(`/library/${userName}`);
+      },
+      onError: (e: any) => {
+        setError(e);
+      },
+    });
   };
 
   return (
@@ -33,12 +39,16 @@ export function HomePage({
         }`}
       >
         <DebouncedInput
-          onChange={setUserName}
+          onChange={(e) => {
+            setError(null);
+            setUserName(e);
+          }}
           value={userName}
-          className={`p-4 text-lg shadow border border-block font-mono ${
-            isMobile ? "w-1/2" : "w-1/4"
-          } `}
+          className={`p-4 text-lg shadow border border-block ${
+            error && "border-red-300"
+          } font-mono ${isMobile ? "w-1/2" : "w-1/4"} `}
           placeholder="Enter Discogs Username"
+          error={error}
         />
         <button
           role="submit"
