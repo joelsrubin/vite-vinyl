@@ -45,6 +45,7 @@ export function HomePage({
             setError(null);
             setUserName(e);
           }}
+          debounce={0}
           value={userName}
           className={`p-4 text-lg shadow border border-block ${
             error && "border-red-300"
