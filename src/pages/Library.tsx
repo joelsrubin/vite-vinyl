@@ -1,11 +1,4 @@
 import { useEffect } from "react";
-import {
-  MutationCache,
-  QueryCache,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "react-query";
 
 import { useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
@@ -24,11 +17,13 @@ function Library({
   const params = useParams();
   const { mutateAsync: mutate } = useFetchAlbums();
   const { userName } = params;
+
   useEffect(() => {
     if (!data) {
       mutate(String(userName), { onSuccess: (result) => setData(result) });
     }
   }, [data, userName]);
+
   if (!data) {
     return (
       <div className="flex justify-center content-center items-center min-h-screen">

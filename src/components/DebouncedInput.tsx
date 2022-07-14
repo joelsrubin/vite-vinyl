@@ -33,6 +33,7 @@ export default function DebouncedInput({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         type="search"
+        spellCheck={false}
       />
       {error && (
         <div className="text-red-500 font-mono text-sm mt-4">

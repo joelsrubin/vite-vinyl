@@ -17,7 +17,6 @@ import {
 import DebouncedInput from "./DebouncedInput";
 import { omittedBasicInformation } from "../constants";
 import { finalFormat, formatRows } from "../utils";
-import { ClipLoader } from "react-spinners";
 
 declare module "@tanstack/table-core" {
   interface FilterMeta {
