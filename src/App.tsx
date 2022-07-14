@@ -1,28 +1,14 @@
 import { useState } from "react";
-import { useQuery } from "react-query";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useFetchAlbums } from "./hooks/useFetchAlbums";
 
 import { HomePage } from "./pages/Homepage";
 import Library from "./pages/Library";
 
-const KEY = "QjMwskBJVDuuVwHxmJuI";
-const SECRET = "oJQZXITXAiAYDBdzvOUgdKIoWnTLvlQn";
-// const USERNAME = "zaqmiller";
-
-export async function fetchAlbums(
-  userName: string | number
-): Promise<Info | undefined> {
-  const data = await fetch(
-    `https://api.discogs.com/users/${userName}/collection/folders/0/releases?&per_page=100&key=${KEY}&secret=${SECRET}`
-  );
-  return await data.json();
-}
 export default function App() {
   const [userName, setUserName] = useState<string | number>("joelsrubin");
-  const { data, refetch, isLoading } = useQuery(
-    "albums",
-    async () => await fetchAlbums(userName)
-  );
+  const { mutateAsync: mutate, data, isSuccess, isLoading } = useFetchAlbums();
 
   return (
     <BrowserRouter>
@@ -32,14 +18,15 @@ export default function App() {
           element={
             <HomePage
               userName={userName}
-              refetch={refetch}
+              mutate={mutate}
               setUserName={setUserName}
+              isLoading={isLoading}
             />
           }
         />
         <Route
           path="/library"
-          element={<Library data={data} userName={userName} />}
+          element={<Library data={data} userName={userName} mutate={mutate} />}
         />
       </Routes>
     </BrowserRouter>

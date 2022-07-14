@@ -1,43 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
-import { useQuery } from "react-query";
+
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
-import { fetchAlbums } from "../App";
 
 import DebouncedInput from "../components/DebouncedInput";
 
 export function HomePage({
   userName,
-  refetch,
+  mutate,
   setUserName,
-}: // isLoading,
-{
+  isLoading,
+}: {
   userName: string | number;
   setUserName: (userName: string | number) => void;
-  refetch: () => void;
-  // isLoading: boolean;
+  mutate: any;
+  isLoading: boolean;
 }) {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
 
-  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
-    try {
-      setIsLoading(true);
-      e.preventDefault();
-      await refetch();
-      await navigate("/library");
-      setIsLoading(false);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-  console.log(isLoading);
+  const submitHandler = async () => {
+    await mutate(userName);
+    navigate("/library");
+  };
+
   return (
     <div className="font-mono text-center text-xl mt-20">
-      <h1>Vinyl Cup</h1>
-      <form
-        onSubmit={(e) => submitHandler(e)}
+      <h1>Vinyl Catalogue</h1>
+      <div
         className={`flex flex-col justify-center content-center items-center mt-10 ${
           isMobile ? "" : ""
         }`}
@@ -52,13 +42,14 @@ export function HomePage({
         />
         <button
           role="submit"
+          onClick={submitHandler}
           className={`${
             isMobile ? "w-1/2" : "w-1/4"
           } bg-green-200 p-5 rounded hover:bg-green-300 font-mono whitespace-no-wrap text-center text-xl mt-10`}
         >
           {isLoading ? <ClipLoader size={20} /> : "submit"}
         </button>
-      </form>
+      </div>
     </div>
   );
 }

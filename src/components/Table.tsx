@@ -17,6 +17,7 @@ import {
 import DebouncedInput from "./DebouncedInput";
 import { omittedBasicInformation } from "../constants";
 import { finalFormat, formatRows } from "../utils";
+import { ClipLoader } from "react-spinners";
 
 declare module "@tanstack/table-core" {
   interface FilterMeta {
@@ -56,6 +57,13 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 };
 
 export function MyTable({ items }: { items: Release[] }) {
+  if (items.length === 0) {
+    return (
+      <div className="flex justify-center content-center items-center min-h-screen">
+        <h1 className="text-lg font-mono">No albums found!</h1>
+      </div>
+    );
+  }
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState(
     optionsObj as VisibilityState
@@ -116,7 +124,6 @@ export function MyTable({ items }: { items: Release[] }) {
     ],
     []
   );
-
   const table = useReactTable({
     data: final,
     columns: cols,

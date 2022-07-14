@@ -1,16 +1,25 @@
+import { useEffect } from "react";
 import { ClipLoader } from "react-spinners";
 import "../App.css";
 import { MyLink } from "../components/Link";
 import { MyTable } from "../components/Table";
 
 function Library({
-  data,
+  data = {} as Info,
   userName,
+  mutate,
 }: {
   data: Info | undefined;
   userName: string | number;
+  mutate: any;
 }) {
-  if (!data) {
+  useEffect(() => {
+    if (Object.keys(data).length === 0) {
+      mutate(userName);
+    }
+  }, [data]);
+
+  if (Object.keys(data).length === 0) {
     return (
       <div className="flex justify-center content-center items-center min-h-screen">
         <ClipLoader size={40} />
