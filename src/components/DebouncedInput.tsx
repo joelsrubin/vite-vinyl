@@ -32,6 +32,7 @@ export default function DebouncedInput({
         {...props}
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        type="search"
       />
       {error && (
         <div className="text-red-500 font-mono text-sm mt-4">
