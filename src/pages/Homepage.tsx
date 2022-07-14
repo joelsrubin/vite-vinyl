@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { isMobile } from "react-device-detect";
 
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,6 @@ export function HomePage({
   const { mutateAsync: mutate, isLoading } = useFetchAlbums();
 
   const submitHandler = async (event: any) => {
-    event.preventDefault();
     await mutate(userName, {
       onSuccess: (result) => {
         setData(result);
@@ -47,12 +46,11 @@ export function HomePage({
           }}
           debounce={0}
           value={userName}
-          className={`p-4 text-lg shadow border border-block ${
-            error && "border-red-300"
+          className={`p-4 text-lg shadow border-2 border-block ${
+            error && "border-red-400"
           } font-mono ${isMobile ? "w-1/2" : "w-1/4"} `}
-          placeholder="Enter Discogs Username"
+          placeholder="username"
           error={error}
-          name="userName"
         />
         <label className="text-sm text-right mt-5">
           Enter A Discogs Username
@@ -63,7 +61,7 @@ export function HomePage({
           className={`${
             isMobile ? "w-1/2" : "w-1/4"
           } bg-green-200 p-5 rounded hover:bg-green-300 font-mono whitespace-no-wrap text-center text-xl mt-10 ${
-            isLoading ? "pointer-events-none" : ""
+            isLoading ? "pointer-events-none touch-none" : ""
           }`}
         >
           {isLoading ? <ClipLoader size={20} /> : "submit"}
