@@ -50,12 +50,17 @@ export function HomePage({
           placeholder="Enter Discogs Username"
           error={error}
         />
+        <label className="text-sm text-right mt-5">
+          Enter A Discogs Username
+        </label>
         <button
           role="submit"
           onClick={submitHandler}
           className={`${
             isMobile ? "w-1/2" : "w-1/4"
-          } bg-green-200 p-5 rounded hover:bg-green-300 font-mono whitespace-no-wrap text-center text-xl mt-10`}
+          } bg-green-200 p-5 rounded hover:bg-green-300 font-mono whitespace-no-wrap text-center text-xl mt-10 ${
+            isLoading ? "pointer-events-none" : ""
+          }`}
         >
           {isLoading ? <ClipLoader size={20} /> : "submit"}
         </button>
