@@ -42,14 +42,11 @@ function Library({
   return (
     <div>
       <h1 className="font-mono text-center text-xl mt-10">
-        username: {userName}
-      </h1>
-      <h1 className="font-mono text-center text-xl mt-2">
-        vinyl: {data.pagination.items}
+        {userName} has {data.pagination.items} albums
       </h1>
 
-      <nav className="flex justify-center mt-4">
-        <MyLink to="/" text="Home" />
+      <nav className="flex justify-center align-middle items-center gap-6 mt-4 flex-row">
+        <MyLink to={`/menu/${userName}`} text="Menu" />
       </nav>
       <MyTable items={data.releases} />
     </div>

@@ -28,7 +28,7 @@ export function HomePage({
     mutateAsync(userName, {
       onSuccess: (result) => {
         setData(result);
-        navigate(`/library/${userName}`);
+        navigate(`/menu/${userName}`);
       },
       onError: (e: unknown) => {
         setError(e as Error);

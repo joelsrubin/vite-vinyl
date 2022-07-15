@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { HomePage } from "./pages/Homepage";
 import Library from "./pages/Library";
+import Menu from "./pages/Menu";
 
 export default function App() {
   const [data, setData] = useState<Info | undefined>(undefined);
@@ -14,6 +15,7 @@ export default function App() {
           path="/library/:userName"
           element={<Library data={data} setData={setData} />}
         />
+        <Route path="/menu/:userName" element={<Menu />} />
       </Routes>
     </BrowserRouter>
   );
