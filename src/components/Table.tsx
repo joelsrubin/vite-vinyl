@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { isMobile } from "react-device-detect";
 import { rankItem, RankingInfo } from "@tanstack/match-sorter-utils";
@@ -17,6 +17,7 @@ import {
 import DebouncedInput from "./DebouncedInput";
 import { omittedBasicInformation } from "../constants";
 import { finalFormat, formatRows } from "../utils";
+import { useSearchParams } from "react-router-dom";
 
 declare module "@tanstack/table-core" {
   interface FilterMeta {
@@ -56,6 +57,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 };
 
 export function MyTable({ items }: { items: Release[] }) {
+  let [searchParams, setSearchParams] = useSearchParams();
   if (items.length === 0) {
     return (
       <div className="flex justify-center content-center items-center min-h-screen">
@@ -142,12 +144,25 @@ export function MyTable({ items }: { items: Release[] }) {
     debugTable: true,
   });
 
+  function handleChange(val: string) {
+    const params = new URLSearchParams();
+    params.append("query", val);
+    setSearchParams(params);
+    setGlobalFilter(val);
+  }
+
+  useEffect(() => {
+    if (searchParams.get("query")) {
+      setGlobalFilter(String(searchParams.get("query")));
+    }
+  }, [searchParams]);
+
   return (
     <>
       <div className="justify-center content-center items-center flex mt-5">
         <DebouncedInput
           value={globalFilter ?? ""}
-          onChange={(value) => setGlobalFilter(String(value))}
+          onChange={(value) => handleChange(String(value))}
           className={`p-4 text-lg shadow border border-block font-mono ${
             isMobile ? "w-1/2" : "w-1/4"
           } `}
