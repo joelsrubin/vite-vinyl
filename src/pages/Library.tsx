@@ -5,18 +5,29 @@ import { ClipLoader } from "react-spinners";
 import "../App.css";
 import { MyLink } from "../components/Link";
 import { MyTable } from "../components/Table";
+import { useFetchAlbums } from "../hooks/useFetchAlbums";
 
-function Library({ data }: { data: Info | undefined }) {
+function Library({
+  data,
+  setData,
+}: {
+  data: Info | undefined;
+  setData: (data: Info | undefined) => void;
+}) {
   const params = useParams();
-  const navigate = useNavigate();
 
+  const { mutateAsync } = useFetchAlbums();
   const { userName } = params;
 
   useEffect(() => {
-    if (!data) {
-      navigate("/");
+    if (!data && userName) {
+      mutateAsync(userName, {
+        onSuccess: (result) => {
+          setData(result);
+        },
+      });
     }
-  }, [data]);
+  }, [data, userName]);
 
   if (!data) {
     return (
