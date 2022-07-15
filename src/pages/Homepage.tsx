@@ -19,8 +19,7 @@ export function HomePage({
 
   const { mutateAsync, isLoading } = useFetchAlbums();
 
-  const submitHandler = (evt: any) => {
-    console.log("here");
+  const submitHandler = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (!userName) {
       setError(new Error("Please enter a user name"));
