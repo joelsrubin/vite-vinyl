@@ -20,6 +20,10 @@ export function HomePage({
   const { mutateAsync, isLoading } = useFetchAlbums();
 
   const submitHandler = async (event: any) => {
+    if (!userName) {
+      setError(new Error("Please enter a user name"));
+      return;
+    }
     mutateAsync(userName, {
       onSuccess: (result) => {
         setData(result);
