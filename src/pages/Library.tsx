@@ -15,7 +15,7 @@ function Library({
   setData: (data: Info | undefined) => void;
 }) {
   const params = useParams();
-
+  const navigate = useNavigate();
   const { mutateAsync } = useFetchAlbums();
   const { userName } = params;
 
@@ -24,6 +24,9 @@ function Library({
       mutateAsync(userName, {
         onSuccess: (result) => {
           setData(result);
+        },
+        onError: () => {
+          navigate("/");
         },
       });
     }
