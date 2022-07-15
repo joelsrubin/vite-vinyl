@@ -17,10 +17,10 @@ export function HomePage({
   const [error, setError] = useState<Error | null>(null);
   const navigate = useNavigate();
 
-  const { mutateAsync: mutate, isLoading } = useFetchAlbums();
+  const { mutateAsync, isLoading } = useFetchAlbums();
 
   const submitHandler = async (event: any) => {
-    await mutate(userName, {
+    mutateAsync(userName, {
       onSuccess: (result) => {
         setData(result);
         navigate(`/library/${userName}`);
