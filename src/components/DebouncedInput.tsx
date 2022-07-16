@@ -1,4 +1,5 @@
 import * as React from "react";
+import { isMobile } from "react-device-detect";
 
 export default function DebouncedInput({
   value: initialValue,
@@ -33,7 +34,7 @@ export default function DebouncedInput({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         spellCheck={false}
-        autoFocus
+        autoFocus={!isMobile}
       />
       {error && (
         <div className="text-red-500 font-mono text-sm mt-4">

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { isMobile } from "react-device-detect";
 
 import { useNavigate } from "react-router-dom";
@@ -72,7 +72,6 @@ export function HomePage({
           />
           <button
             type="submit"
-            // onClick={submitHandler}
             className={`${getMobileStyle(
               isMobile
             )} bg-green-200 p-5 rounded hover:bg-green-300 font-mono whitespace-no-wrap text-center text-xl mt-10 ${
