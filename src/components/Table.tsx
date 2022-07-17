@@ -172,14 +172,6 @@ export function MyTable({ items }: { items: Release[] }) {
           isMobile ? "flex-col" : "flex-row"
         } gap-4`}
       >
-        <DebouncedInput
-          value={globalFilter ?? ""}
-          onChange={(value) => handleChange(String(value))}
-          className={`p-4 text-lg shadow border border-block font-mono ${
-            isMobile ? "w-1/2" : "w-1/4"
-          } `}
-          placeholder="Search all..."
-        />
         <select
           className={`p-4 text-lg shadow border border-block font-mono  ${
             isMobile ? "w-1/2" : "w-1/4"
@@ -199,6 +191,14 @@ export function MyTable({ items }: { items: Release[] }) {
             <option key={i}>{artist}</option>
           ))}
         </select>
+        <DebouncedInput
+          value={globalFilter ?? ""}
+          onChange={(value) => handleChange(String(value))}
+          className={`p-4 text-lg shadow border border-block font-mono ${
+            isMobile ? "w-1/2" : "w-1/4"
+          } `}
+          placeholder="Search all..."
+        />
       </div>
       <table className="font-mono place-items-center m-auto mt-10 ">
         <thead>
