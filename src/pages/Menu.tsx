@@ -7,7 +7,7 @@ export default function Menu() {
     <div className="flex flex-col items-center justify-center h-screen gap-6">
       <MyLink to="/" text="Home" />
       <MyLink to={`/library/${userName}`} text="Library" />
-      {/* <MyLink /> */}
+      {/* <MyLink to="/cardView" text="Card View" /> */}
     </div>
   );
 }

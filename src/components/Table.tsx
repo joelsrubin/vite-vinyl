@@ -87,6 +87,11 @@ export function MyTable({ items }: { items: Release[] }) {
 
   const data = formatRows(rows);
   const final: Album[] = useMemo(() => finalFormat(data), []);
+  const artists = useMemo(
+    () => [...new Set(final.map((album) => album.artists))],
+    []
+  );
+
   const cols: ColumnDef<Album>[] = useMemo(
     () => [
       {
@@ -159,7 +164,7 @@ export function MyTable({ items }: { items: Release[] }) {
 
   return (
     <>
-      <div className="justify-center content-center items-center flex mt-5">
+      <div className="justify-center content-center items-center flex mt-5 flex-row gap-4">
         <DebouncedInput
           value={globalFilter ?? ""}
           onChange={(value) => handleChange(String(value))}
@@ -168,6 +173,24 @@ export function MyTable({ items }: { items: Release[] }) {
           } `}
           placeholder="Search all..."
         />
+        <select
+          className={`p-4 text-lg shadow border border-block font-mono  ${
+            isMobile ? "w-1/2" : "w-1/4"
+          } `}
+          onChange={(e) => {
+            console.log(e.target.value);
+            if (e.target.value === "select an option") {
+              setGlobalFilter("");
+            } else {
+              setGlobalFilter(e.target.value);
+            }
+          }}
+        >
+          <option value="select an option">Artists</option>
+          {artists.map((artist, i) => (
+            <option key={i}>{artist}</option>
+          ))}
+        </select>
       </div>
       <table className="font-mono place-items-center m-auto mt-10 ">
         <thead>

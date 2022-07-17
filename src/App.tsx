@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import CardView from "./pages/CardView";
 
 import { HomePage } from "./pages/Homepage";
 import Library from "./pages/Library";
@@ -16,6 +17,7 @@ export default function App() {
           element={<Library data={data} setData={setData} />}
         />
         <Route path="/menu/:userName" element={<Menu />} />
+        <Route path="/cardView" element={<CardView />} />
       </Routes>
     </BrowserRouter>
   );
