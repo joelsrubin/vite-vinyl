@@ -190,7 +190,7 @@ export function MyTable({ items }: { items: Release[] }) {
             }
           }}
         >
-          <option value="select an option">Artists</option>
+          <option value="select an option">All</option>
           {artists.map((artist, i) => (
             <option key={i}>{artist}</option>
           ))}
