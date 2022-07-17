@@ -12,6 +12,9 @@ async function paginatedFetch(url: string): Promise<Release[]> {
   }
 
   let albums: Release[] = [...data.releases];
+  if (data.pagination.pages > 10) {
+    throw new Error("Too many pages to fetch.");
+  }
   if (data.pagination.pages > 1) {
     let urls = [];
 

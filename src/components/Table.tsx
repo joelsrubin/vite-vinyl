@@ -174,9 +174,7 @@ export function MyTable({ items }: { items: Release[] }) {
   return (
     <>
       <div
-        className={`justify-center content-center items-center flex mt-5 ${
-          isMobile ? "flex-col" : "flex-row"
-        } gap-4`}
+        className={`justify-center content-center items-center flex mt-5 flex-col gap-4`}
       >
         <select
           className={`p-4 text-lg shadow border border-block font-mono  ${
