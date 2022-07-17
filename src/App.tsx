@@ -7,7 +7,7 @@ import Library from "./pages/Library";
 import Menu from "./pages/Menu";
 
 export default function App() {
-  const [data, setData] = useState<Info | undefined>(undefined);
+  const [data, setData] = useState<Release[] | undefined>(undefined);
   return (
     <BrowserRouter>
       <Routes>

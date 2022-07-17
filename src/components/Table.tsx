@@ -57,6 +57,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 };
 
 export function MyTable({ items }: { items: Release[] }) {
+  console.log({ items });
   let [searchParams, setSearchParams] = useSearchParams();
   if (items.length === 0) {
     return (
@@ -154,9 +155,15 @@ export function MyTable({ items }: { items: Release[] }) {
 
   function handleChange(val: string) {
     const params = new URLSearchParams();
-    params.append("query", val);
-    setSearchParams(params);
-    setGlobalFilter(val);
+
+    if (val) {
+      params.append("query", val);
+      setSearchParams(params);
+      setGlobalFilter(val);
+    } else {
+      setSearchParams("");
+      setGlobalFilter("");
+    }
   }
 
   useEffect(() => {

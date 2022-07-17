@@ -11,7 +11,7 @@ import { useFetchAlbums } from "../hooks/useFetchAlbums";
 export function HomePage({
   setData,
 }: {
-  setData: (data: Info | undefined) => void;
+  setData: (data: Release[] | undefined) => void;
 }) {
   const [userName, setUserName] = useState<string>("joelsrubin");
   const [error, setError] = useState<Error | null>(null);
@@ -27,6 +27,7 @@ export function HomePage({
     }
     mutateAsync(userName, {
       onSuccess: (result) => {
+        console.log(result);
         setData(result);
         navigate(`/menu/${userName}`);
       },
