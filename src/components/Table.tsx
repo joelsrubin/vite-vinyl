@@ -16,7 +16,7 @@ import {
 } from "@tanstack/react-table";
 import DebouncedInput from "./DebouncedInput";
 import { omittedBasicInformation } from "../constants";
-import { finalFormat, formatRows } from "../utils";
+import { compare, finalFormat, formatRows } from "../utils";
 import { useSearchParams } from "react-router-dom";
 
 declare module "@tanstack/table-core" {
@@ -88,10 +88,7 @@ export function MyTable({ items }: { items: Release[] }) {
   const data = formatRows(rows);
   const final: Album[] = useMemo(() => finalFormat(data), []);
   const artists = useMemo(
-    () =>
-      [...new Set(final.map((album) => album.artists))].sort((a, b) => {
-        return a.localeCompare(b);
-      }),
+    () => [...new Set(final.map((album) => album.artists))].sort(compare),
     []
   );
 

@@ -35,3 +35,22 @@ export function formatRows(data: any) {
     return formattedRow;
   });
 }
+
+export function compare(a: string, b: string) {
+  var aTitle = a.toLowerCase(),
+    bTitle = b.toLowerCase();
+
+  aTitle = removeArticles(aTitle);
+  bTitle = removeArticles(bTitle);
+
+  if (aTitle > bTitle) return 1;
+  if (aTitle < bTitle) return -1;
+  return 0;
+}
+
+function removeArticles(str: string) {
+  const words = str.split(" ");
+  if (words.length <= 1) return str;
+  if (words[0] == "the") return words.splice(1).join(" ");
+  return str;
+}
