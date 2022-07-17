@@ -88,7 +88,10 @@ export function MyTable({ items }: { items: Release[] }) {
   const data = formatRows(rows);
   const final: Album[] = useMemo(() => finalFormat(data), []);
   const artists = useMemo(
-    () => [...new Set(final.map((album) => album.artists))],
+    () =>
+      [...new Set(final.map((album) => album.artists))].sort((a, b) => {
+        return a.localeCompare(b);
+      }),
     []
   );
 
