@@ -192,6 +192,7 @@ export function MyTable({ items }: { items: Release[] }) {
               setGlobalFilter(e.target.value);
             }
           }}
+          value={globalFilter ?? ""}
         >
           <option value="select an option">All</option>
           {artists.map((artist, i) => (
