@@ -27,7 +27,6 @@ export function HomePage({
     }
     mutateAsync(userName, {
       onSuccess: (result) => {
-        console.log(result);
         setData(result);
         navigate(`/menu/${userName}`);
       },

@@ -57,7 +57,6 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 };
 
 export function MyTable({ items }: { items: Release[] }) {
-  console.log({ items });
   let [searchParams, setSearchParams] = useSearchParams();
   if (items.length === 0) {
     return (
@@ -184,7 +183,6 @@ export function MyTable({ items }: { items: Release[] }) {
             isMobile ? "w-1/2" : "w-1/4"
           } `}
           onChange={(e) => {
-            console.log(e.target.value);
             if (e.target.value === "select an option") {
               setGlobalFilter("");
             } else {
