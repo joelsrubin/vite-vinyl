@@ -31,7 +31,7 @@ async function paginatedFetch(url: string): Promise<Release[]> {
 }
 
 const fetchAlbums = async (userName: string): Promise<Release[]> => {
-  const URL = `https://api.discogs.com/users/${userName}/collection/folders/0/releases?&per_page=250&key=${KEY}&secret=${SECRET}`;
+  const URL = `https://api.discogs.com/users/${userName}/collection/folders/0/releases?&per_page=100&key=${KEY}&secret=${SECRET}`;
   try {
     const albums = await paginatedFetch(URL);
     return albums;
