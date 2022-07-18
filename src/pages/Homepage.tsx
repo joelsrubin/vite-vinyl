@@ -75,9 +75,7 @@ export function HomePage({
             className={`${getMobileStyle(
               isMobile
             )} bg-green-200 p-5 rounded hover:bg-green-300 font-mono whitespace-no-wrap text-center text-xl mt-10 ${
-              isLoading
-                ? "pointer-events-none touch-none hover:bg-green-200"
-                : ""
+              isLoading && "pointer-events-none touch-none hover:bg-green-200"
             }`}
           >
             {isLoading ? <ClipLoader size={20} /> : "submit"}
