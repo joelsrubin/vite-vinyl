@@ -13,7 +13,7 @@ export function HomePage({
 }: {
   setData: (data: Release[] | undefined) => void;
 }) {
-  const [userName, setUserName] = useState<string>("joelsrubin");
+  const [userName, setUserName] = useState<string>("");
   const [error, setError] = useState<Error | null>(null);
   const navigate = useNavigate();
 
